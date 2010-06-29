@@ -5,6 +5,7 @@
 # now does auto-add of readme first  files .
 #
 
+export http_proxy="http://apt.shop.lan:3142/"
 agi="apt-get install --assume-yes"
 agr="apt-get remove --assume-yes"
 
@@ -15,7 +16,7 @@ if [ $(id -u) != 0 ]; then
 fi
 
 function prepare() {
-	$agi dialog
+	$agi dialog mesa-utils
 }
 
 DIA="dialog --backtitle FREEGEEKCENTREFORMACHINEQUALITYCONTROL"
