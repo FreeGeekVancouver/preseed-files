@@ -47,7 +47,13 @@ function qc_stress() {
 
 function qc_audio() {
     msg "We are going to play sound.  Make sure you have speakers or headphones plugged in."
-    aplay /usr/share/sounds/purple/alert.wav
+    if [ -f "/usr/share/sounds/purple/alert.wav" ]; then
+       aplay /usr/share/sounds/purple/alert.wav
+    elif [ -f "/usr/share/sounds/alsa/Front_Center.wav" ]; then
+       aplay /usr/share/sounds/alsa/Front_Center.wav"
+    else
+       msg "Error: There is no sound to play"
+    fi
     yesno "Did you hear sound?" && return
     yesno "Try to play sound again?" && qc_audio
     return 1
