@@ -1,0 +1,14 @@
+#!/bin/sh
+
+stage2=/tmp/fgqc.stage2
+
+if ! ping -c 1 shop.freegeekvancouver.org
+then
+    echo Check your network connection!
+    exit 1
+fi
+
+rm -f $stage2
+wget -O $stage2 http://shop.freegeekvancouver.org/fgqc.stage2 || exit 1
+clear
+sudo /bin/bash $stage2
