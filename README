@@ -1,0 +1,7 @@
+This repository lives at:
+/net/groups/development/repositories/preseed.shop.lan.git
+
+The deployed version is located at:
+larch:/srv/www/preseed/
+
+Please remember to update the deployed copy after a commit.
