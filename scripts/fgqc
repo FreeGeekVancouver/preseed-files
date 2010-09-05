@@ -2,13 +2,21 @@
 
 stage2=/tmp/fgqc.stage2
 
-if ! ping -c 1 shop.freegeekvancouver.org
+if ! ping -c 1 shop.freegeekvancouver.org >/dev/null
 then
     echo Check your network connection!
     exit 1
 fi
 
 rm -f $stage2
-wget -O $stage2 http://preseed.shop.lan/scripts/fgqc.stage2 || exit 1
-clear
-sudo /bin/bash $stage2
+if [ -n "$1" ]
+then
+  wget -O $stage2 --quiet http://u.shop.lan/~$1/fgqc || \
+    wget -O $stage2 --quiet http://preseed.shop.lan/scripts/fgqc.stage2 || exit 1
+  clear
+  sudo /bin/bash $stage2 $1
+else
+  wget -O $stage2 --quiet http://preseed.shop.lan/scripts/fgqc.stage2 || exit 1
+  clear
+  sudo /bin/bash $stage2
+fi
