@@ -5,6 +5,13 @@ cannotget() {
   exit $1
 }
 
+cannotgetuser() {
+  echo "[Error $1] Unable to download stage2."
+  echo "Ensure you have entered a correct username of an account having a QC script."
+  echo "(The file called 'fgqc' must be placed in the '~/public_html' directory)"
+  echo "If you want the normal QC, please type 'fgqc' with nothing after it."
+  exit $1
+}
 
 stage2=/tmp/fgqc.stage2
 
@@ -17,13 +24,10 @@ fi
 rm -f $stage2
 if [ -n "$1" ]
 then
-  wget -O $stage2 --quiet http://u.shop.lan/~$1/fgqc || \
-    wget -O $stage2 --quiet http://preseed.shop.lan/scripts/fgqc.stage2 || (cannotget $?;exit $?)
-  clear
-  sudo /bin/bash $stage2 $1
+  wget -O $stage2 --quiet http://u.shop.lan/~$1/fgqc || cannotgetuser $?
 else
-  wget -O $stage2 --quiet http://preseed.shop.lan/scripts/fgqc.stage2 || (cannotget $?;exit $?)
-  clear
-  sudo /bin/bash $stage2
+  wget -O $stage2 --quiet http://preseed.shop.lan/scripts/fgqc.stage2 || cannotget $?
 fi
+clear
+sudo /bin/bash $stage2 $2
 
