@@ -75,7 +75,7 @@ function qc_video() {
     elif [ -f "/usr/share/example-content/Ubuntu_Free_Culture_Showcase/SpiritOfUbuntu.ogv" ]; then
         totem "/usr/share/example-content/Ubuntu_Free_Culture_Showcase/SpiritOfUbuntu.ogv"
     elif [ -f "/usr/share/example-content/Ubuntu_Free_Culture_Showcase/UbuntuIsHumanity.ogv" ]; then
-	totem "/usr/share/example-content/Ubuntu_Free_Culture_Showcase/UbuntuIsHumanity.ogv" ]
+	totem "/usr/share/example-content/Ubuntu_Free_Culture_Showcase/UbuntuIsHumanity.ogv"
     else
         msg "Error: There is no video to play!"
     fi
