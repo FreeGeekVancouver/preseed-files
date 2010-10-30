@@ -76,8 +76,8 @@ function qc_video() {
         totem "/usr/share/example-content/Ubuntu_Free_Culture_Showcase/SpiritOfUbuntu.ogv"
     elif [ -f "/usr/share/example-content/Ubuntu_Free_Culture_Showcase/UbuntuIsHumanity.ogv" ]; then
 	totem "/usr/share/example-content/Ubuntu_Free_Culture_Showcase/UbuntuIsHumanity.ogv"
-    elif [ -f "/usr/share/example-content/Ubuntu_Free_culture_Showcase/How fast.ogg" ]; then
-        totem "/usr/share/example-content/Ubuntu_Free_culture_Showcase/How fast.ogg"
+    elif [ -f "/usr/share/example-content/Ubuntu_Free_Culture_Showcase/How fast.ogg" ]; then
+        totem "/usr/share/example-content/Ubuntu_Free_Culture_Showcase/How fast.ogg"
     else
         msg "Error: There is no video to play!"
     fi
