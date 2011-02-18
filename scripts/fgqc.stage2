@@ -141,6 +141,7 @@ function qc_upgrade() {
     export http_proxy="http://apt.shop.lan:3142/"
     aptitude update
 
+    aptitude install -y `check-language-support`
     aptitude safe-upgrade -y && pass "upgrade"
     unset http_proxy
 }
