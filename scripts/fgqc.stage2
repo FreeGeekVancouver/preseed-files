@@ -51,6 +51,7 @@ function qc_audio() {
        aplay /usr/share/sounds/purple/alert.wav
     elif [ -f "/usr/share/sounds/alsa/Front_Center.wav" ]; then
        aplay /usr/share/sounds/alsa/Front_Center.wav
+       aplay /usr/share/sounds/alsa/Rear_Right.wav
     else
        msg "Error: There is no sound to play"
     fi
