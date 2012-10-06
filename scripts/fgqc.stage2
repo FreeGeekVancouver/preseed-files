@@ -151,18 +151,20 @@ function pass() {
 
 function makefiles() {
   if [ ! -d  /etc/skel/Desktop/"Read Me First"  ] ; then
-    echo  creating freegeek docs
+    echo "Creating freegeek docs"
     mkdir -p  /usr/share/doc/freegeek
     wget --no-proxy -O "/usr/share/doc/freegeek/resource page free at heart.odt" \
-      preseed.shop.lan/docs/resource\ page\ free\ at\ heart.odt
+      'http://preseed.shop.lan/docs/resource page free at heart.odt' || \
+      msg "ALERT" "Documentation download failed, please alert your build instructor"
     wget --no-proxy -O '/usr/share/doc/freegeek/bringing home your computer.odt' \
-      'preseed.shop.lan/docs/bringing home your computer.odt'
-    cp -r /usr/share/doc/freegeek Desktop/"Read Me First"
-    chown -R "${SUDO_USER-$USER}" Desktop/"Read Me First"
+      'http://preseed.shop.lan/docs/bringing home your computer.odt' || \
+      msg "ALERT" "Documentation download failed, please alert your build instructor"
+    cp -r /usr/share/doc/freegeek "${HOME}/Desktop/Read Me First"
+    chown -R "${SUDO_USER-$USER}" "${HOME}/Desktop/Read Me First"
     mkdir /etc/skel/Desktop
-    cp -a /usr/share/doc/freegeek /etc/skel/Desktop/"Read Me First"
+    cp -a /usr/share/doc/freegeek "/etc/skel/Desktop/Read Me First"
   else
-    echo freegeek docs already created.
+    echo "Freegeek docs already created."
   fi
 }
 prepare || exit 1
