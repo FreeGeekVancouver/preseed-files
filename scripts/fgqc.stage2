@@ -11,7 +11,7 @@ if [ $(id -u) != 0 ]; then
 fi
 
 function prepare() {
-  $agi dialog mesa-utils
+  $agi dialog mesa-utils stress
 }
 
 DIA="dialog --backtitle FREEGEEKCENTREFORMACHINEQUALITYCONTROL"
@@ -31,13 +31,20 @@ function yesno() {
 
 function qc_stress() {
   stress_seconds=180
-  msg "We're gonna stress test the machine now"
-  info "Running $stress_seconds of stress testing..."
-  $agi stress || return 1
-  echo -ne "\n\nRunning stress test for $stress_seconds seconds..."
-  stress --cpu 10 --io 4 --vm 10 --vm-bytes 10M --hdd 2 --timeout $stress_seconds --quiet || return 1
-  msg "Is the machine still responding?"
-  $agr stress || return 1
+  msg "We're going to stress test the machine now"
+  stress --cpu 10 --io 4 --vm 10 --vm-bytes 10M --hdd 2 \
+    --timeout $stress_seconds --quiet &
+  perl <<EOF | $DIA --gauge "${stress_seconds} seconds of stress test" 8 70
+\$|=1;
+\$i=0;
+while (\$i<${stress_seconds})
+{
+  print int(\$i++/${stress_seconds}*100),qq(\\n);
+  sleep 1;
+}
+EOF
+
+  msg "Stress test complete"
 }
 
 function qc_audio() {
