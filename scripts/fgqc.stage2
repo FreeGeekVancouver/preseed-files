@@ -6,8 +6,7 @@ agr="apt-get remove --assume-yes"
 
 # make sure we have the privileges to write to disks
 if [ $(id -u) != 0 ]; then
-  echo $0: must be root, exiting
-  exit 1
+  exec sudo $0
 fi
 
 function prepare() {
