@@ -76,6 +76,10 @@ function qc_3d() {
   glxgears
 }
 
+function qc_lshw() {
+  lshw |grep '*-\|vendor:\|product:\|capabilities:' | less
+}
+
 function qc_usb() {
   msg "Plug a USB mouse into each port and move the mouse around to make sure it works.  Press ENTER when finished"
 }
@@ -210,6 +214,7 @@ do
     network "Test network" \
     audio "Play audio" \
     usb "Test usb device" \
+    lshw "Show lshw output" \
     stress "Stress test machine" \
     2> /tmp/choice || break
   defaultitem=$(cat /tmp/choice)
