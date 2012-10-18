@@ -163,6 +163,8 @@ function qc_video() {
   return 1
 }
 
+# == Other functions
+#
 function makefiles() {
   if [ ! -d  /etc/skel/Desktop/"Read Me First"  ] ; then
     echo "Creating freegeek docs"
