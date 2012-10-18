@@ -10,6 +10,8 @@ if [ $(id -u) != 0 ]; then
   exec sudo $0
 fi
 
+# == Helper functions
+#
 function agi() {
   apt-get -o "Acquire::http::Proxy=${apt_server}" --assume-yes \
     install $*
@@ -18,10 +20,6 @@ function agi() {
 function agr() {
   apt-get -o "Acquire::http::Proxy=${apt_server}" --assume-yes \
     remove $*
-}
-
-function prepare() {
-  agi dialog mesa-utils stress
 }
 
 DIA="dialog --backtitle FREEGEEKCENTREFORMACHINEQUALITYCONTROL"
@@ -37,6 +35,12 @@ function info() {
 }
 function yesno() {
   $DIA --defaultno --yesno "$1" 19 70
+}
+function fail() {
+  msg FAIL "$1 $2"
+}
+function pass() {
+  msg2 PASS "$1 passed"
 }
 
 function qc_stress() {
@@ -163,13 +167,6 @@ function qc_upgrade() {
   unset http_proxy
 }
 
-function fail() {
-  msg FAIL "$1 $2"
-}
-function pass() {
-  msg2 PASS "$1 passed"
-}
-
 function makefiles() {
   if [ ! -d  /etc/skel/Desktop/"Read Me First"  ] ; then
     echo "Creating freegeek docs"
@@ -188,6 +185,11 @@ function makefiles() {
     echo "Freegeek docs already created."
   fi
 }
+
+function prepare() {
+  agi dialog mesa-utils stress
+}
+
 prepare || exit 1
 
 makefiles
