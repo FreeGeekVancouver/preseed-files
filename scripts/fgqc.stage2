@@ -5,11 +5,6 @@
 # APT proxy server
 apt_server='http://apt.shop.lan:3142'
 
-# make sure we have the privileges to write to disks
-if [ $(id -u) != 0 ]; then
-  exec sudo $0
-fi
-
 # == Helper functions
 #
 function agi() {
@@ -188,6 +183,14 @@ function prepare() {
   agi dialog mesa-utils stress
 }
 
+# == The main script
+#
+
+# make sure we have the privileges to write to disks
+if [ $(id -u) != 0 ]; then
+  exec sudo $0
+fi
+
 prepare || exit 1
 
 makefiles
@@ -195,7 +198,7 @@ makefiles
 $DIA --inputbox "Enter your volunteer number: " 8 40 2>/tmp/choice || exit 1
 DIA="${DIA}___$(cat /tmp/choice)"
 
-defaultitem="all"
+defaultitem="cpu"
 
 while :
 do
