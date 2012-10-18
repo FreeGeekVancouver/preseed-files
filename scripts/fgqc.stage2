@@ -43,6 +43,76 @@ function pass() {
   msg2 PASS "$1 passed"
 }
 
+# == QC test functions
+#
+function qc_3d() {
+  glxgears
+}
+
+function qc_audio() {
+  msg "We are going to play sound.  Make sure you have speakers or headphones plugged in."
+  if [ -f "/usr/share/sounds/purple/alert.wav" ]; then
+    aplay /usr/share/sounds/purple/alert.wav
+  elif [ -f "/usr/share/sounds/alsa/Front_Center.wav" ]; then
+    aplay /usr/share/sounds/alsa/Front_Center.wav
+    aplay /usr/share/sounds/alsa/Rear_Right.wav
+  else
+    msg "Error: There is no sound to play"
+  fi
+  yesno "Did you hear sound?" && return
+  yesno "Try to play sound again?" && qc_audio
+  return 1
+}
+
+function qc_cpu() {
+  msg2 cpu "$(cat /proc/cpuinfo)"
+}
+
+function qc_floppy() {
+  msg "insert a floppy to be formatted (/dev/fd0)"
+  if fdformat /dev/fd0 2> /tmp/qcflop
+  then
+    pass "floppy"
+  else
+    fail "floppy" "$(cat /tmp/qcflop)"
+  fi
+}
+
+function qc_hdd() {
+  msg2 hdd "$(fdisk -l | grep '^Disk /dev')"
+}
+
+function qc_lshw() {
+  lshw |grep '*-\|vendor:\|product:\|capabilities:' | less
+}
+
+function qc_mobo() {
+  msg2 mobo "$(lshw -C bus)"
+}
+
+function qc_network() {
+  if ping -c 4 www.google.com
+  then
+    pass "network"
+  else
+    fail "network"
+  fi
+}
+
+function qc_optical() {
+  msg "For each optical drive in the system, insert the appropriate media and make sure it shows up on the desktop.  Put a CDROM in a CDROM/RW drive and a DVDROM in a DVDROM/RW drive."
+}
+
+function qc_os() {
+  . /etc/lsb-release
+  msg2 os " $(dpkg --print-architecture) $(echo $DISTRIB_DESCRIPTION)"
+}
+
+function qc_ram() {
+  msg2 ram "$(lshw -short -C memory)"
+  msg "Remember to run a memtest when finished this program"
+}
+
 function qc_stress() {
   stress_seconds=180
   msg "We're going to stress test the machine now"
@@ -61,27 +131,13 @@ EOF
   msg "Stress test complete"
 }
 
-function qc_audio() {
-  msg "We are going to play sound.  Make sure you have speakers or headphones plugged in."
-  if [ -f "/usr/share/sounds/purple/alert.wav" ]; then
-    aplay /usr/share/sounds/purple/alert.wav
-  elif [ -f "/usr/share/sounds/alsa/Front_Center.wav" ]; then
-    aplay /usr/share/sounds/alsa/Front_Center.wav
-    aplay /usr/share/sounds/alsa/Rear_Right.wav
-  else
-    msg "Error: There is no sound to play"
-  fi
-  yesno "Did you hear sound?" && return
-  yesno "Try to play sound again?" && qc_audio
-  return 1
-}
+function qc_upgrade() {
+  export http_proxy="http://apt.shop.lan:3142/"
+  aptitude update
 
-function qc_3d() {
-  glxgears
-}
-
-function qc_lshw() {
-  lshw |grep '*-\|vendor:\|product:\|capabilities:' | less
+  aptitude install -y `check-language-support`
+  aptitude safe-upgrade -y && pass "upgrade"
+  unset http_proxy
 }
 
 function qc_usb() {
@@ -105,66 +161,6 @@ function qc_video() {
   yesno "Did you see video?" && return
   yesno "Try to play video again?" && qc_video
   return 1
-}
-
-function qc_all() {
-  qc_audio
-  qc_video
-  qc_stress
-}
-
-function qc_ram() {
-  msg2 ram "$(lshw -short -C memory)"
-  msg "Remember to run a memtest when finished this program"
-}
-
-function qc_mobo() {
-  msg2 mobo "$(lshw -C bus)"
-}
-
-function qc_cpu() {
-  msg2 cpu "$(cat /proc/cpuinfo)"
-}
-
-function qc_hdd() {
-  msg2 hdd "$(fdisk -l | grep '^Disk /dev')"
-}
-
-function qc_os() {
-  . /etc/lsb-release
-  msg2 os " $(dpkg --print-architecture) $(echo $DISTRIB_DESCRIPTION)"
-}
-
-function qc_network() {
-  if ping -c 4 www.google.com
-  then
-    pass "network"
-  else
-    fail "network"
-  fi
-}
-
-function qc_floppy() {
-  msg "insert a floppy to be formatted (/dev/fd0)"
-  if fdformat /dev/fd0 2> /tmp/qcflop
-  then
-    pass "floppy"
-  else
-    fail "floppy" "$(cat /tmp/qcflop)"
-  fi
-}
-
-function qc_optical() {
-  msg "For each optical drive in the system, insert the appropriate media and make sure it shows up on the desktop.  Put a CDROM in a CDROM/RW drive and a DVDROM in a DVDROM/RW drive."
-}
-
-function qc_upgrade() {
-  export http_proxy="http://apt.shop.lan:3142/"
-  aptitude update
-
-  aptitude install -y `check-language-support`
-  aptitude safe-upgrade -y && pass "upgrade"
-  unset http_proxy
 }
 
 function makefiles() {
