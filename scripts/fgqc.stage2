@@ -5,6 +5,9 @@
 # APT proxy server
 apt_server='http://apt.shop.lan:3142'
 
+# URL to upload buildsheets and lshw reports to
+report_server='http://build.shop.lan/scripts/upload.cgi'
+
 # == Helper functions
 #
 function agi() {
@@ -161,6 +164,16 @@ function qc_video() {
 # == Other functions
 #
 function makefiles() {
+  if [ ! -d /var/lib/fgqc ]
+  then
+    mkdir /var/lib/fgqc
+  fi
+
+  if [ ! -f /var/lib/fgqc/system-id ]
+  then
+    uuid -v1 > /var/lib/fgqc/system-id
+  fi
+
   if [ ! -d  /etc/skel/Desktop/"Read Me First"  ] ; then
     echo "Creating freegeek docs"
     mkdir -p  /usr/share/doc/freegeek
@@ -180,7 +193,14 @@ function makefiles() {
 }
 
 function prepare() {
-  agi dialog mesa-utils stress
+  agi curl dialog mesa-utils stress uuid
+}
+
+function report_lshw() {
+  lshw -html > /var/lib/fgqc/lshw.html 2>/dev/null
+  curl -F "sysid=@/var/lib/fgqc/system-id" \
+    -F "file=@/var/lib/fgqc/lshw.html" \
+    "${report_server}" > /dev/null 2>&1
 }
 
 # == The main script
@@ -194,6 +214,7 @@ fi
 prepare || exit 1
 
 makefiles
+report_lshw &
 
 $DIA --inputbox "Enter your volunteer number: " 8 40 2>/tmp/choice || exit 1
 DIA="${DIA}___$(cat /tmp/choice)"
