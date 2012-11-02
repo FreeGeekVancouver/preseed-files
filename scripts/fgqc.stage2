@@ -1,16 +1,27 @@
 #!/bin/bash
 
-export http_proxy="http://apt.shop.lan:3142/"
-agi="apt-get install --assume-yes"
-agr="apt-get remove --assume-yes"
+# == Configuration variables
+#
+# APT proxy server
+apt_server='http://apt.shop.lan:3142'
 
 # make sure we have the privileges to write to disks
 if [ $(id -u) != 0 ]; then
   exec sudo $0
 fi
 
+function agi() {
+  apt-get -o "Acquire::http::Proxy=${apt_server}" --assume-yes \
+    install $*
+}
+
+function agr() {
+  apt-get -o "Acquire::http::Proxy=${apt_server}" --assume-yes \
+    remove $*
+}
+
 function prepare() {
-  $agi dialog mesa-utils stress
+  agi dialog mesa-utils stress
 }
 
 DIA="dialog --backtitle FREEGEEKCENTREFORMACHINEQUALITYCONTROL"
