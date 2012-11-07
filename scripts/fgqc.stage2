@@ -81,7 +81,10 @@ function qc_hdd() {
 }
 
 function qc_lshw() {
-  lshw |grep '*-\|vendor:\|product:\|capabilities:' | less
+  lshw -quiet | perl -e 'print "Use the arrow keys to scroll, hit q when finished, press h for help.\n\n";
+                         while (<STDIN>) {
+                           print if /\*-|vendor:|product:|capabilities:/;
+                         }' | less
 }
 
 function qc_mobo() {
