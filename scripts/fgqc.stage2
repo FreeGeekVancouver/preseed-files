@@ -81,10 +81,17 @@ function qc_hdd() {
 }
 
 function qc_lshw() {
-  lshw -quiet | perl -e 'print "Use the arrow keys to scroll, hit q when finished, press h for help.\n\n";
+  spinner 'Building lshw report' &
+  PID=$!
+  TMPFILE=`mktemp`
+  lshw -quiet | perl -e 'print "Use the arrow keys to scroll.\n\n";
                          while (<STDIN>) {
                            print if /\*-|vendor:|product:|capabilities:/;
-                         }' | less
+                         }' > $TMPFILE
+  kill $PID >/dev/null 2>&1
+  $DIA --begin 2 2 --title 'LSHW Report' --exit-label "Continue" \
+    --textbox "${TMPFILE}" 20 75
+  rm "${TMPFILE}"
 }
 
 function qc_mobo() {
@@ -204,6 +211,17 @@ function report_lshw() {
   curl -F "sysid=@/var/lib/fgqc/system-id" \
     -F "file=@/var/lib/fgqc/lshw.html" \
     "${report_server}" > /dev/null 2>&1
+}
+
+function spinner() {
+  while true
+  do
+    for SPIN in '-' '/' '|' '\'
+    do
+      $DIA --cr-wrap --infobox "$1 ${SPIN}" 3 60
+      sleep 0.25
+    done
+  done
 }
 
 # == The main script
