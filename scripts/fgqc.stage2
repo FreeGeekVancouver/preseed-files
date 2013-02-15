@@ -173,6 +173,31 @@ function qc_video() {
 
 # == Other functions
 #
+function check_non_free() {
+  spinner "Checking non-free packages" &
+  PID=$!
+
+  TMPFILE=`mktemp`
+  echo "The following non-free packages are installed on this machine.
+This is usually against Free Geek's software policy
+(http://wiki.freegeekvancouver.org/article/Software_policy).  Please
+check with your build instructor on how to proceed.
+
+" > "$TMPFILE"
+
+  COUNT=$(wc "$TMPFILE")
+  aptitude -q search '!~nflashplugin-installer ~smultiverse ~i' \
+    '~srestricted ~i' >> "$TMPFILE"
+
+  kill $PID >/dev/null 2>&1
+
+  if [ "${COUNT}" != "$(wc "$TMPFILE")" ]
+  then
+    $DIA --title 'Non-Free Packages' --exit-label "Continue" \
+      --textbox "${TMPFILE}" 0 0
+  fi
+}
+
 function makefiles() {
   if [ ! -d /var/lib/fgqc ]
   then
@@ -233,6 +258,8 @@ if [ $(id -u) != 0 ]; then
 fi
 
 prepare || exit 1
+
+check_non_free
 
 makefiles
 report_lshw &
