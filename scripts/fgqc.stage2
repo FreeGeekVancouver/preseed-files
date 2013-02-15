@@ -11,12 +11,12 @@ report_server='http://build.shop.lan/scripts/upload.cgi'
 # == Helper functions
 #
 function agi() {
-  apt-get -q -o "Acquire::http::Proxy=${apt_server}" --assume-yes \
+  debconf-apt-progress -- apt-get -y -o "Acquire::http::Proxy=${apt_server}" \
     install $*
 }
 
 function agr() {
-  apt-get -q -o "Acquire::http::Proxy=${apt_server}" --assume-yes \
+  debconf-apt-progress -- apt-get -y -o "Acquire::http::Proxy=${apt_server}" \
     remove $*
 }
 
@@ -141,10 +141,17 @@ EOF
 
 function qc_upgrade() {
   export http_proxy="http://apt.shop.lan:3142/"
-  aptitude update
+  debconf-apt-progress --dlwaypoint 85 -- aptitude update
+  
+  local LANG_PKGS=$(check-language-support)
+  
+  if [ -n "${LANG_PKGS}" ]
+  then
+    debconf-apt-progress -- aptitude --assume-yes install "${LANG_PKGS}"
+  fi
 
-  aptitude install -y `check-language-support`
-  aptitude safe-upgrade -y && pass "upgrade"
+  debconf-apt-progress -- aptitude --assume-yes full-upgrade && pass "upgrade"
+
   unset http_proxy
 }
 
@@ -233,7 +240,20 @@ function makefiles() {
 }
 
 function prepare() {
-  agi curl dialog mesa-utils stress uuid
+  echo "Launching FGQC..."
+  local INSTALL="False"
+  for prog in dialog curl stress uuid glxgears
+  do
+    if ! which $prog > /dev/null
+    then
+      INSTALL="True"
+    fi
+  done
+
+  if [ "${INSTALL}" = "True" ]
+  then
+    agi curl dialog mesa-utils stress uuid
+  fi
 }
 
 function report_lshw() {
