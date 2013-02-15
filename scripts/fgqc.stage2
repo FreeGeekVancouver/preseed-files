@@ -63,7 +63,7 @@ function qc_audio() {
 }
 
 function qc_cpu() {
-  msg2 cpu "$(cat /proc/cpuinfo)"
+  msg2 cpu "$(< /proc/cpuinfo)"
 }
 
 function qc_floppy() {
@@ -72,7 +72,7 @@ function qc_floppy() {
   then
     pass "floppy"
   else
-    fail "floppy" "$(cat /tmp/qcflop)"
+    fail "floppy" "$(< /tmp/qcflop)"
   fi
 }
 
@@ -270,7 +270,7 @@ makefiles
 report_lshw &
 
 $DIA --inputbox "Enter your volunteer number: " 8 40 2>/tmp/choice || cleanup 1
-DIA="${DIA}___$(cat /tmp/choice)"
+DIA="${DIA}___$(< /tmp/choice)"
 
 defaultitem="cpu"
 
@@ -294,8 +294,8 @@ do
     lshw "Show lshw output" \
     stress "Stress test machine" \
     2> /tmp/choice || break
-  defaultitem=$(cat /tmp/choice)
-  qc_$(cat /tmp/choice)
+  defaultitem=$(< /tmp/choice)
+  qc_$(< /tmp/choice)
 done
 
 cleanup 0
