@@ -198,6 +198,11 @@ check with your build instructor on how to proceed.
   fi
 }
 
+function cleanup() {
+  clear
+  exit $1
+}
+
 function makefiles() {
   if [ ! -d /var/lib/fgqc ]
   then
@@ -257,14 +262,14 @@ if [ $(id -u) != 0 ]; then
   exec sudo $0
 fi
 
-prepare || exit 1
+prepare || cleanup 1
 
 check_non_free
 
 makefiles
 report_lshw &
 
-$DIA --inputbox "Enter your volunteer number: " 8 40 2>/tmp/choice || exit 1
+$DIA --inputbox "Enter your volunteer number: " 8 40 2>/tmp/choice || cleanup 1
 DIA="${DIA}___$(cat /tmp/choice)"
 
 defaultitem="cpu"
@@ -292,3 +297,5 @@ do
   defaultitem=$(cat /tmp/choice)
   qc_$(cat /tmp/choice)
 done
+
+cleanup 0
