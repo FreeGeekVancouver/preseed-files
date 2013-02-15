@@ -11,12 +11,12 @@ report_server='http://build.shop.lan/scripts/upload.cgi'
 # == Helper functions
 #
 function agi() {
-  apt-get -o "Acquire::http::Proxy=${apt_server}" --assume-yes \
+  apt-get -q -o "Acquire::http::Proxy=${apt_server}" --assume-yes \
     install $*
 }
 
 function agr() {
-  apt-get -o "Acquire::http::Proxy=${apt_server}" --assume-yes \
+  apt-get -q -o "Acquire::http::Proxy=${apt_server}" --assume-yes \
     remove $*
 }
 
