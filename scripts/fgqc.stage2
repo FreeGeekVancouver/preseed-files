@@ -23,16 +23,16 @@ function agr() {
 DIA="dialog --backtitle FREEGEEKCENTREFORMACHINEQUALITYCONTROL"
 
 function msg() {
-  $DIA --msgbox "$1" 19 70
+  $DIA --begin 2 2 --msgbox "$1" 20 75
 }
 function msg2() {
-  $DIA --title "$1" --no-collapse --msgbox "$2" 19 70
+  $DIA --begin 2 2 --title "$1" --no-collapse --msgbox "$2" 20 75
 }
 function info() {
-  $DIA --infobox "$1" 19 70
+  $DIA --begin 2 2 --infobox "$1" 20 75
 }
 function yesno() {
-  $DIA --defaultno --yesno "$1" 19 70
+  $DIA --begin 2 2 --defaultno --yesno "$1" 20 75
 }
 function fail() {
   msg FAIL "$1 $2"
@@ -227,7 +227,7 @@ defaultitem="cpu"
 while :
 do
   $DIA --default-item $defaultitem --cancel-label "Finish" --ok-label "Test" \
-    --menu "Tests" 21 70 20 \
+    --begin 2 2 --menu "Tests" 20 75 20 \
     upgrade "Upgrade packages" \
     cpu "show cpuinfo" \
     mobo "show motherboard info" \
