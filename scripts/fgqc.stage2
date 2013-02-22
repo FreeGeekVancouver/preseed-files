@@ -226,10 +226,10 @@ function makefiles() {
     mkdir -p  /usr/share/doc/freegeek
     wget --no-proxy -O "/usr/share/doc/freegeek/resource page free at heart.odt" \
       'http://preseed.shop.lan/docs/resource page free at heart.odt' || \
-      msg "ALERT" "Documentation download failed, please alert your build instructor"
+      msg2 "ALERT" "Documentation download failed, please alert your build instructor"
     wget --no-proxy -O '/usr/share/doc/freegeek/bringing home your computer.odt' \
       'http://preseed.shop.lan/docs/bringing home your computer.odt' || \
-      msg "ALERT" "Documentation download failed, please alert your build instructor"
+      msg2 "ALERT" "Documentation download failed, please alert your build instructor"
     cp -r /usr/share/doc/freegeek "${HOME}/Desktop/Read Me First"
     chown -R "${SUDO_USER-$USER}" "${HOME}/Desktop/Read Me First"
     mkdir /etc/skel/Desktop
