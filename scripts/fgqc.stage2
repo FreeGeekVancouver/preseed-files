@@ -11,12 +11,12 @@ report_server='http://build.shop.lan/scripts/upload.cgi'
 # == Helper functions
 #
 function agi() {
-  debconf-apt-progress -- apt-get -y -o "Acquire::http::Proxy=${apt_server}" \
+  apt-get -y -o "Acquire::http::Proxy=${apt_server}" \
     install $*
 }
 
 function agr() {
-  debconf-apt-progress -- apt-get -y -o "Acquire::http::Proxy=${apt_server}" \
+  apt-get -y -o "Acquire::http::Proxy=${apt_server}" \
     remove $*
 }
 
@@ -141,16 +141,16 @@ EOF
 
 function qc_upgrade() {
   export http_proxy="http://apt.shop.lan:3142/"
-  debconf-apt-progress --dlwaypoint 85 -- aptitude update
+  aptitude update
   
   local LANG_PKGS=$(check-language-support)
   
   if [ -n "${LANG_PKGS}" ]
   then
-    debconf-apt-progress -- aptitude --assume-yes install "${LANG_PKGS}"
+    aptitude --assume-yes install "${LANG_PKGS}"
   fi
 
-  debconf-apt-progress -- aptitude --assume-yes full-upgrade && pass "upgrade"
+  aptitude --assume-yes full-upgrade && pass "upgrade"
 
   unset http_proxy
 }
