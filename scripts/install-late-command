@@ -1,12 +1,12 @@
 #!/bin/sh
 
 in-target rm /etc/apt/apt.conf
-in-target wget -nv -O /usr/local/bin/fgqc http://preseed.shop.lan/scripts/fgqc
+wget -O /target/usr/local/bin/fgqc http://preseed.shop.lan/scripts/fgqc
 in-target chmod +x /usr/local/bin/fgqc
 apt-install $(in-target check-language-support)
 in-target rm /var/lib/update-notifier/user.d/incomplete-language-support-gnome.note
 echo "blacklist b43" > /target/etc/modprobe.d/blacklist-b43.conf
 in-target /bin/sed -i s/enabled=1/enabled=0/ /etc/default/apport
-in-target wget -nv -O /tmp/libdvdcss2.deb \
+wget -O /target/tmp/libdvdcss2.deb \
     http://files.shop.lan/install_files/libdvdcss2_$(chroot /target uname -i).deb && \
   in-target dpkg -i /tmp/libdvdcss2.deb
