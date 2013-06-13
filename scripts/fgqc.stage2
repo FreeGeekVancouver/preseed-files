@@ -178,6 +178,11 @@ function qc_video() {
   return 1
 }
 
+function qc_grub() {
+  grub-editenv - set recordfail=1 #this simulates a boot failure so Grub would show up automatically on next boot without holding shift
+  yesno "Do you want to reboot into Grub now?" && shutdown -r now
+}
+
 # == Other functions
 #
 function check_non_free() {
@@ -312,6 +317,7 @@ do
     audio "Play audio" \
     usb "Test usb device" \
     lshw "Show lshw output" \
+    grub "Reboot into GRUB for memtest" \
     stress "Stress test machine" \
     2> /tmp/choice || break
   defaultitem=$(< /tmp/choice)
