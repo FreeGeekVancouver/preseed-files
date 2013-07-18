@@ -238,9 +238,11 @@ function makefiles() {
     echo "Freegeek docs already created."
   fi
 
-  if [ -f ${HOME}/Desktop/oem-config-prepare*.desktop ]; then
-    mv ${HOME}/Desktop/oem-config-prepare*.desktop "${HOME}/Desktop/Read Me First/"
-  fi
+  for file in "${HOME}"/Desktop/oem-config-prepare*.desktop; do
+    if [ -f "${file}" ]; then
+      mv "${file}" "${HOME}/Desktop/Read Me First/"
+    fi
+  done
 }
 
 function prepare() {
