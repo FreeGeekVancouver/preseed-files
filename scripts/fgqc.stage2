@@ -34,6 +34,11 @@ function agr() {
     remove $*
 }
 
+function agu() {
+  apt-get -y -o "Acquire::http::Proxy=${apt_server}" \
+    update
+}
+
 DIA="dialog --backtitle FREEGEEKCENTREFORMACHINEQUALITYCONTROL"
 
 function msg() {
@@ -260,6 +265,24 @@ function makefiles() {
 
 function prepare() {
   echo "Launching FGQC..."
+  # Check the package listing is current
+  local UPDATE="False"
+  local TMP=$(mktemp)
+  touch -d '-7 days' "${TMP}"
+  for index in /var/lib/apt/lists/*Packages; do
+    echo -n $index
+    if [ "${index}" -ot "${TMP}" ]; then
+      UPDATE="True"
+    fi
+    echo " ${UPDATE}"
+  done
+  rm "${TMP}"
+  if [ "${UPDATE}" = "True" ]
+  then
+    agu
+  fi
+
+  # Install prerequisite programs
   local INSTALL="False"
   for prog in dialog curl stress uuid glxgears
   do
