@@ -290,7 +290,7 @@ function prepare() {
 
   # Install prerequisite programs
   local INSTALL="False"
-  for prog in dialog curl stress uuid glxgears
+  for prog in dialog curl stress uuid glxgears cheese
   do
     if ! which $prog > /dev/null
     then
@@ -300,7 +300,7 @@ function prepare() {
 
   if [ "${INSTALL}" = "True" ]
   then
-    agi curl dialog mesa-utils stress uuid
+    agi curl dialog mesa-utils stress uuid cheese
   fi
 }
 
